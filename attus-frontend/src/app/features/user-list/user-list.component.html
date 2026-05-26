@@ -69,12 +69,14 @@
     <div class="paginator-wrapper">
       <div class="custom-page-size">
         <span>{{ 'PAGINATOR.ITEMS_PER_PAGE' | translate }}</span>
-        <mat-select [value]="pageSize()" (selectionChange)="changePageSize($event.value)" class="page-size-select" panelClass="paginator-select-panel">
-          <mat-option [value]="5">5</mat-option>
-          <mat-option [value]="10">10</mat-option>
-          <mat-option [value]="25">25</mat-option>
-          <mat-option [value]="10000">{{ 'PAGINATOR.ALL' | translate }}</mat-option>
-        </mat-select>
+        <mat-form-field appearance="outline" class="page-size-form-field">
+          <mat-select [value]="pageSize()" (selectionChange)="changePageSize($event.value)" panelClass="paginator-select-panel">
+            <mat-option [value]="5">5</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="25">25</mat-option>
+            <mat-option [value]="10000">{{ 'PAGINATOR.ALL' | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
 
       <mat-paginator
