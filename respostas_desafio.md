@@ -11,6 +11,7 @@
 
 ```typescript
 class Produto {
+// O TypeScript permite declarar e atribuir as propriedades diretamente no construtor// O TypeScript permite declarar e atribuir as propriedades diretamente no construtor
   constructor(
     public id: number,
     public descricao: string,
@@ -29,14 +30,23 @@ class Verdureira {
     ];
   }
 
+  // Método auxiliar privado
+  private getProdutoById(produtoId: number): Produto | undefined {
+    return this.produtos.find(produto => produto.id === produtoId);
+  }
+
   getDescricaoProduto(produtoId: number): string | undefined {
-    const produto = this.produtos.find(p => p.id === produtoId);
+    // Usando o método auxiliar aqui!
+    const produto = this.getProdutoById(produtoId); 
+    
     if (!produto) return undefined;
     return `${produto.id} - ${produto.descricao} (${produto.quantidadeEstoque}x)`;
   }
 
   hasEstoqueProduto(produtoId: number): boolean {
-    const produto = this.produtos.find(p => p.id === produtoId);
+    // Usando o método auxiliar aqui também!
+    const produto = this.getProdutoById(produtoId); 
+    
     return !!produto && produto.quantidadeEstoque > 0;
   }
 }
