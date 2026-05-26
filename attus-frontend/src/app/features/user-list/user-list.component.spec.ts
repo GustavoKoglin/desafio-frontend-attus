@@ -1,9 +1,10 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserListComponent } from './user-list.component';
 import { UserService } from '../../core/services/user.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -21,10 +22,11 @@ describe('UserListComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [UserListComponent, BrowserAnimationsModule, MatDialogModule],
+      imports: [UserListComponent, BrowserAnimationsModule], // Removed MatDialogModule to use custom mock
       providers: [
         { provide: UserService, useValue: mockUserService },
-        { provide: MatDialog, useValue: mockDialog }
+        { provide: MatDialog, useValue: mockDialog },
+        provideEnvironmentNgxMask()
       ]
     }).compileComponents();
     

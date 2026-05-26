@@ -33,7 +33,7 @@
 
   @if (!loading() && !error()) {
     <div class="grid">
-      @for (user of users(); track user.id) {
+      @for (user of paginatedUsers(); track user.id) {
         <mat-card class="user-card">
           <mat-card-header>
             <mat-icon mat-card-avatar>person</mat-icon>
@@ -48,5 +48,13 @@
         </mat-card>
       }
     </div>
+
+    <mat-paginator
+      [length]="totalItems()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="handlePageEvent($event)"
+      aria-label="Selecionar página">
+    </mat-paginator>
   }
 </div>

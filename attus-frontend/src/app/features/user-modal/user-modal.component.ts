@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { NgxMaskDirective } from 'ngx-mask';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user';
 
@@ -26,7 +27,8 @@ export function cpfValidator(control: AbstractControl): ValidationErrors | null 
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    NgxMaskDirective
   ],
   templateUrl: './user-modal.component.html',
   styleUrls: ['./user-modal.component.css']

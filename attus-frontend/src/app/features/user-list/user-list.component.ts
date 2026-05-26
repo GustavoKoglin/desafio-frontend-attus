@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -7,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { UserService } from '../../core/services/user.service';
@@ -24,7 +26,8 @@ import { UserModalComponent } from '../user-modal/user-modal.component';
     MatInputModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatPaginatorModule
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
@@ -32,24 +35,46 @@ import { UserModalComponent } from '../user-modal/user-modal.component';
 export class UserListComponent implements OnInit {
   private userService = inject(UserService);
   private dialog = inject(MatDialog);
+  private destroyRef = inject(DestroyRef);
 
   searchControl = new FormControl('');
   
   users = signal<User[]>([]);
+  paginatedUsers = signal<User[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
+
+  totalItems = signal<number>(0);
+  pageSize = signal<number>(5);
+  currentPage = signal<number>(0);
 
   ngOnInit() {
     this.loadInitialUsers();
     this.setupSearch();
   }
 
+  handlePageEvent(e: PageEvent) {
+    this.currentPage.set(e.pageIndex);
+    this.pageSize.set(e.pageSize);
+    this.updatePagination();
+  }
+
+  updatePagination() {
+    const startIndex = this.currentPage() * this.pageSize();
+    const endIndex = startIndex + this.pageSize();
+    this.paginatedUsers.set(this.users().slice(startIndex, endIndex));
+  }
+
   loadInitialUsers() {
     this.loading.set(true);
     this.error.set(null);
-    this.userService.getUsers().subscribe({
+    this.userService.getUsers().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (data) => {
         this.users.set(data);
+        this.totalItems.set(data.length);
+        this.updatePagination();
         this.loading.set(false);
       },
       error: () => {
@@ -61,6 +86,7 @@ export class UserListComponent implements OnInit {
 
   setupSearch() {
     this.searchControl.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef),
       debounceTime(300),
       distinctUntilChanged(),
       tap(() => {
@@ -79,6 +105,9 @@ export class UserListComponent implements OnInit {
       ))
     ).subscribe(filtered => {
       this.users.set(filtered);
+      this.totalItems.set(filtered.length);
+      this.currentPage.set(0);
+      this.updatePagination();
       this.loading.set(false);
     });
   }

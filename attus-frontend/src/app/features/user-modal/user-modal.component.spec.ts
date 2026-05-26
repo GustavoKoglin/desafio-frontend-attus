@@ -5,6 +5,8 @@ import { UserService } from '../../core/services/user.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 
+import { provideEnvironmentNgxMask } from 'ngx-mask';
+
 describe('UserModalComponent', () => {
   let component: UserModalComponent;
   let fixture: ComponentFixture<UserModalComponent>;
@@ -21,7 +23,8 @@ describe('UserModalComponent', () => {
       providers: [
         { provide: MatDialogRef, useValue: { close: jest.fn() } },
         { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: UserService, useValue: mockUserService }
+        { provide: UserService, useValue: mockUserService },
+        provideEnvironmentNgxMask()
       ]
     }).compileComponents();
     
