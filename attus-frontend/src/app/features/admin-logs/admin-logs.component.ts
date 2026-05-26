@@ -46,7 +46,7 @@ export class AdminLogsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentUser = this.authService.getCurrentUser();
+    this.currentUser = this.authService.currentUser();
     
     if (this.isAdmin) {
       this.fetchLogs();
