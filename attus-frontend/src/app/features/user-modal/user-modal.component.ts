@@ -11,6 +11,7 @@ import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../../core/services/auth.service';
 
 export function cpfValidator(control: AbstractControl): ValidationErrors | null {
   const cpf = control.value;
@@ -47,7 +48,12 @@ export class UserModalComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<UserModalComponent>);
   private snackBar = inject(MatSnackBar);
   public translate = inject(TranslateService);
+  public authService = inject(AuthService);
   public data = inject<{ user?: User }>(MAT_DIALOG_DATA);
+
+  get isAdmin() {
+    return this.authService.hasRole(['Admin']);
+  }
 
   ngOnInit() {
     this.isEditMode = !!this.data.user;
@@ -58,7 +64,9 @@ export class UserModalComponent implements OnInit {
       email: [this.data.user?.email || '', [Validators.required, Validators.email]],
       cpf: [this.data.user?.cpf || '', [Validators.required, cpfValidator]],
       phone: [this.data.user?.phone || '', Validators.required],
-      phoneType: [this.data.user?.phoneType || '', Validators.required]
+      phoneType: [this.data.user?.phoneType || '', Validators.required],
+      role: [{ value: (this.data.user as any)?.role || 'Visualizador', disabled: !this.isAdmin }, Validators.required],
+      password: ['']
     });
   }
 
@@ -66,7 +74,7 @@ export class UserModalComponent implements OnInit {
     if (this.userForm.invalid) return;
     
     this.loading = true;
-    const userData = this.userForm.value;
+    const userData = this.userForm.getRawValue();
 
     if (this.isEditMode) {
       this.userService.updateUser({ ...this.data.user, ...userData }).subscribe(() => {

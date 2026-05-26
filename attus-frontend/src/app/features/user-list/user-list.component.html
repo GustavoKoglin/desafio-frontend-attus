@@ -22,8 +22,20 @@
         <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
-      <button mat-raised-button color="warn" (click)="openUserModal()">
-        + {{ 'HEADER.ADD_USER' | translate }}
+      @if (isAdmin) {
+        <button mat-stroked-button color="primary" (click)="goToLogs()">
+          <mat-icon>history</mat-icon> Logs
+        </button>
+      }
+
+      @if (canEdit) {
+        <button mat-raised-button color="warn" (click)="openUserModal()">
+          + {{ 'HEADER.ADD_USER' | translate }}
+        </button>
+      }
+
+      <button mat-icon-button color="warn" (click)="logout()" aria-label="Sair">
+        <mat-icon>logout</mat-icon>
       </button>
     </div>
   </div>
@@ -55,12 +67,14 @@
             <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions align="end">
-            <button mat-button color="warn" (click)="deleteUser(user)">
-              <mat-icon>delete</mat-icon> {{ 'CARD.DELETE' | translate }}
-            </button>
-            <button mat-button color="primary" (click)="openUserModal(user)">
-              <mat-icon>edit</mat-icon> {{ 'CARD.EDIT' | translate }}
-            </button>
+            @if (canEdit) {
+              <button mat-button color="warn" (click)="deleteUser(user)">
+                <mat-icon>delete</mat-icon> {{ 'CARD.DELETE' | translate }}
+              </button>
+              <button mat-button color="primary" (click)="openUserModal(user)">
+                <mat-icon>edit</mat-icon> {{ 'CARD.EDIT' | translate }}
+              </button>
+            }
           </mat-card-actions>
         </mat-card>
       }
@@ -90,20 +104,6 @@
         aria-label="Selecionar página">
       </mat-paginator>
     </div>
-  }
-
-  <!-- Logs Section -->
-  @if (logs().length > 0) {
-    <div class="logs-container">
-      <h3>{{ 'LOGS.TITLE' | translate }}</h3>
-      <ul>
-        @for (log of logs(); track log.date) {
-          <li>
-            <span class="log-date">{{ log.date | date:'shortTime' }}</span> 
-            {{ log.message }}
-          </li>
-        }
-      </ul>
     </div>
   }
 </div>

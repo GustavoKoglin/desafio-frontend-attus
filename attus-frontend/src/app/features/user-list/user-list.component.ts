@@ -16,8 +16,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { UserService } from '../../core/services/user.service';
+import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user';
 import { UserModalComponent } from '../user-modal/user-modal.component';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class CustomPaginatorIntl extends MatPaginatorIntl {
@@ -73,10 +75,28 @@ export class CustomPaginatorIntl extends MatPaginatorIntl {
 })
 export class UserListComponent implements OnInit {
   private userService = inject(UserService);
+  public authService = inject(AuthService);
+  private router = inject(Router);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
   public translate = inject(TranslateService);
+
+  get canEdit() {
+    return this.authService.hasRole(['Admin', 'Editor']);
+  }
+
+  get isAdmin() {
+    return this.authService.hasRole(['Admin']);
+  }
+
+  logout() {
+    this.authService.logout();
+  }
+
+  goToLogs() {
+    this.router.navigate(['/admin/logs']);
+  }
 
   isDarkMode = false;
   currentLang = 'pt-br';
@@ -97,8 +117,6 @@ export class UserListComponent implements OnInit {
   paginatedUsers = signal<User[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
-
-  logs = this.userService.logs;
 
   totalItems = signal<number>(0);
   pageSize = signal<number>(10000);

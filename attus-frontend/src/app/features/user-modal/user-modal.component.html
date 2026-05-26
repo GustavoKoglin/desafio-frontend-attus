@@ -52,6 +52,24 @@
         }
       </mat-form-field>
     </div>
+
+    @if (isAdmin) {
+      <div class="row">
+        <mat-form-field appearance="outline" class="flex-1">
+          <mat-label>Permissão de Acesso</mat-label>
+          <mat-select formControlName="role">
+            <mat-option value="Visualizador">Visualizador</mat-option>
+            <mat-option value="Editor">Editor</mat-option>
+            <mat-option value="Admin">Admin</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="flex-1">
+          <mat-label>Nova Senha (Opcional se edição)</mat-label>
+          <input matInput formControlName="password" type="password">
+        </mat-form-field>
+      </div>
+    }
   </form>
 </mat-dialog-content>
 
