@@ -46,5 +46,8 @@
     "NEXT_PAGE": "Próxima página",
     "PREV_PAGE": "Página anterior",
     "OF": "de"
+  },
+  "PROFILE": {
+    "NO_PASSWORD_CHANGE_DEMO": "Por ser uma demonstração, não foi implementada a funcionalidade de alteração de senha!"
   }
 }
