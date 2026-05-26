@@ -21,7 +21,7 @@ if (!fs.existsSync(DB_FILE)) {
     users: [
       {
         id: uuidv4(),
-        name: 'Admin',
+        name: 'Gustavo Koglin',
         email: 'gustavo.koglin@teste.com',
         password: adminPassword,
         role: 'Admin',

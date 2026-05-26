@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "2927747a-3c9e-4f86-a42c-b32978c2bbfd",
-      "name": "Admin",
+      "name": "Gustavo Koglin",
       "email": "gustavo.koglin@teste.com",
       "password": "$2b$10$18dIw5Ah5rySdp1WWUonEOEC2Z7S8RuB1cazbb48O2NtYkXyi8psy",
       "role": "Admin",
