@@ -12,7 +12,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgxMaskDirective } from 'ngx-mask';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UserModalComponent } from '../user-modal/user-modal.component';
@@ -53,12 +53,16 @@ export class AdminLogsComponent implements OnInit {
   public authService = inject(AuthService);
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
+  public translate = inject(TranslateService);
 
   get isAdmin() {
     return this.authService.hasRole(['Admin']);
   }
 
   ngOnInit() {
+    this.translate.setDefaultLang('pt-br');
+    this.translate.use(this.translate.currentLang || this.translate.getDefaultLang() || 'pt-br');
+
     this.currentUser = this.authService.currentUser();
     this.initProfileForm();
     
