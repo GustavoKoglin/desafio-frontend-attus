@@ -1,10 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxMaskDirective } from 'ngx-mask';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,11 +23,16 @@ import { User } from '../../core/models/user';
   standalone: true,
   imports: [
     CommonModule, 
+    ReactiveFormsModule,
     MatCardModule, 
     MatButtonModule, 
     MatIconModule, 
     MatTabsModule,
     MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSnackBarModule,
+    NgxMaskDirective,
     TranslateModule
   ],
   templateUrl: './admin-logs.component.html',
@@ -34,12 +44,15 @@ export class AdminLogsComponent implements OnInit {
   loading = true;
   loadingUsers = true;
   currentUser: any = null;
+  profileForm!: FormGroup;
 
   private http = inject(HttpClient);
   private router = inject(Router);
   private userService = inject(UserService);
   private dialog = inject(MatDialog);
   public authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+  private snackBar = inject(MatSnackBar);
 
   get isAdmin() {
     return this.authService.hasRole(['Admin']);
@@ -47,11 +60,36 @@ export class AdminLogsComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.authService.currentUser();
+    this.initProfileForm();
     
     if (this.isAdmin) {
       this.fetchLogs();
       this.fetchPlatformUsers();
     }
+  }
+
+  initProfileForm() {
+    this.profileForm = this.fb.group({
+      name: [this.currentUser?.name || '', Validators.required],
+      email: [{ value: this.currentUser?.email || '', disabled: true }],
+      cpf: [this.currentUser?.cpf || '', Validators.required],
+      phone: [this.currentUser?.phone || '', Validators.required]
+    });
+  }
+
+  saveProfile() {
+    if (this.profileForm.invalid) return;
+    
+    const updatedData = { ...this.currentUser, ...this.profileForm.value };
+    this.userService.updatePlatformUser(this.currentUser.id, updatedData).subscribe({
+      next: () => {
+        this.snackBar.open('Perfil atualizado com sucesso!', 'Fechar', { duration: 3000 });
+        // Optionally update auth token if you have a refresh mechanism, or just reflect local changes.
+      },
+      error: () => {
+        this.snackBar.open('Erro ao atualizar perfil.', 'Fechar', { duration: 3000 });
+      }
+    });
   }
 
   fetchLogs() {
@@ -67,7 +105,7 @@ export class AdminLogsComponent implements OnInit {
   fetchPlatformUsers() {
     this.userService.getPlatformUsers().subscribe({
       next: (users) => {
-        this.platformUsers = users;
+        this.platformUsers = users.filter(u => u.id !== this.currentUser?.id);
         this.loadingUsers = false;
       },
       error: () => this.loadingUsers = false

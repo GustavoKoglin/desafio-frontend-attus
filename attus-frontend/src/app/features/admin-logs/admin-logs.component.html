@@ -12,51 +12,52 @@
     <mat-tab label="Meu Perfil">
       <div class="tab-content">
         <div class="tab-header">
-          <p>Detalhes da sua conta e permissões atuais.</p>
+          <p>Mantenha seus dados atualizados. O e-mail não pode ser alterado.</p>
         </div>
         @if (currentUser) {
-          <mat-card class="user-card profile-info-card">
-            <mat-card-header>
-              <mat-icon mat-card-avatar color="primary">account_circle</mat-icon>
+          <mat-card class="profile-form-card">
+            <mat-card-header style="margin-bottom: 24px;">
+              <mat-icon mat-card-avatar color="primary" style="transform: scale(1.5);">account_circle</mat-icon>
               <mat-card-title>{{ currentUser.name }}</mat-card-title>
-              <mat-card-subtitle>{{ currentUser.email }}</mat-card-subtitle>
+              <mat-card-subtitle>Cargo Atual: {{ currentUser.role }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-              <p><strong>Cargo (Role):</strong> {{ currentUser.role }}</p>
-              <p><strong>Fuso Horário:</strong> {{ currentUser.timezone }}</p>
+              <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="profile-form">
+                <mat-form-field appearance="outline">
+                  <mat-label>Nome Completo</mat-label>
+                  <input matInput formControlName="name" placeholder="Ex: Ana Silva">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>E-mail</mat-label>
+                  <input matInput formControlName="email">
+                </mat-form-field>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline">
+                    <mat-label>CPF</mat-label>
+                    <input matInput formControlName="cpf" mask="000.000.000-00" placeholder="000.000.000-00">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Telefone</mat-label>
+                    <input matInput formControlName="phone" mask="(00) 00000-0000" placeholder="(11) 99999-9999">
+                  </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                  <button mat-flat-button color="primary" type="submit" [disabled]="profileForm.invalid">
+                    Salvar Alterações
+                  </button>
+                </div>
+              </form>
             </mat-card-content>
           </mat-card>
         }
       </div>
     </mat-tab>
 
-    <!-- ABA 1: Logs de Auditoria -->
-    <mat-tab label="Logs de Auditoria" *ngIf="isAdmin">
-      <div class="tab-content">
-        @if (loading) {
-          <p>Carregando logs...</p>
-        } @else {
-          <div class="logs-grid">
-            @for (log of logs; track log.id) {
-              <mat-card class="log-card">
-                <mat-card-header>
-                  <mat-icon mat-card-avatar>history</mat-icon>
-                  <mat-card-title>{{ log.action }}</mat-card-title>
-                  <mat-card-subtitle>{{ log.date }} às {{ log.time }}</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-                  <p><strong>Autor:</strong> {{ log.authorName }} ({{ log.authorEmail }})</p>
-                  <p><strong>Fuso Horário:</strong> {{ log.timezone }}</p>
-                  <p><strong>Local (IP):</strong> {{ log.local }}</p>
-                </mat-card-content>
-              </mat-card>
-            }
-          </div>
-        }
-      </div>
-    </mat-tab>
-
-    <!-- ABA 2: Usuários da Plataforma -->
+    <!-- ABA 1: Usuários da Plataforma -->
     <mat-tab label="Usuários do Painel" *ngIf="isAdmin">
       <div class="tab-content">
         <div class="tab-header">
@@ -98,6 +99,32 @@
                   <p><strong>Role:</strong> {{ user.role }}</p>
                   <p><strong>CPF:</strong> {{ user.cpf }}</p>
                   <p><strong>Telefone:</strong> {{ user.phone }}</p>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- ABA 2: Logs de Auditoria -->
+    <mat-tab label="Logs de Auditoria" *ngIf="isAdmin">
+      <div class="tab-content">
+        @if (loading) {
+          <p>Carregando logs...</p>
+        } @else {
+          <div class="logs-grid">
+            @for (log of logs; track log.id) {
+              <mat-card class="log-card">
+                <mat-card-header>
+                  <mat-icon mat-card-avatar>history</mat-icon>
+                  <mat-card-title>{{ log.action }}</mat-card-title>
+                  <mat-card-subtitle>{{ log.date }} às {{ log.time }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p><strong>Autor:</strong> {{ log.authorName }} ({{ log.authorEmail }})</p>
+                  <p><strong>Fuso Horário:</strong> {{ log.timezone }}</p>
+                  <p><strong>Local (IP):</strong> {{ log.local }}</p>
                 </mat-card-content>
               </mat-card>
             }
