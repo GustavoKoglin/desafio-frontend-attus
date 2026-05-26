@@ -14,8 +14,8 @@ function seed() {
   const db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
   
   // Limpar os fakes antigos caso existam (opcional) ou apenas adicionar novos.
-  // Vamos manter o Admin e limpar o resto
-  db.users = db.users.filter(u => u.email === 'gustavo.koglin@teste.com');
+  // Vamos manter os usuários reais (que têm senha) da Plataforma e limpar os fakes
+  db.users = db.users.filter(u => u.type === 'Platform' && u.password !== '');
 
   for (let i = 1; i <= 90; i++) {
     const fName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -24,7 +24,6 @@ function seed() {
     const email = `${fName.toLowerCase()}.${lName.toLowerCase()}${i}@teste.com`;
     const cpf = `000.000.000-${i.toString().padStart(2, '0')}`;
     const phone = `1199999${i.toString().padStart(4, '0')}`;
-    const role = roles[Math.floor(Math.random() * roles.length)];
 
     db.users.push({
       id: uuidv4(),
@@ -34,8 +33,7 @@ function seed() {
       phone,
       phoneType: 'celular',
       type: 'App',
-      role,
-      password: '' // fake users without password
+      password: '' // fake users sem senha e sem role
     });
   }
 
