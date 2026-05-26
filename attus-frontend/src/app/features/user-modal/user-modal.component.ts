@@ -49,7 +49,7 @@ export class UserModalComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   public translate = inject(TranslateService);
   public authService = inject(AuthService);
-  public data = inject<{ user?: User }>(MAT_DIALOG_DATA);
+  public data = inject<{ user?: User, type?: 'App' | 'Platform' }>(MAT_DIALOG_DATA);
 
   get isAdmin() {
     return this.authService.hasRole(['Admin']);
@@ -77,12 +77,20 @@ export class UserModalComponent implements OnInit {
     const userData = this.userForm.getRawValue();
 
     if (this.isEditMode) {
-      this.userService.updateUser({ ...this.data.user, ...userData }).subscribe(() => {
+      const updateCall = this.data.type === 'Platform' 
+        ? this.userService.updatePlatformUser(this.data.user!.id!, { ...this.data.user, ...userData })
+        : this.userService.updateUser({ ...this.data.user, ...userData });
+
+      updateCall.subscribe(() => {
         this.loading = false;
         this.dialogRef.close(true);
       });
     } else {
-      this.userService.addUser(userData).subscribe(() => {
+      const createCall = this.data.type === 'Platform'
+        ? this.userService.createPlatformUser(userData)
+        : this.userService.addUser(userData);
+
+      createCall.subscribe(() => {
         this.loading = false;
         this.dialogRef.close(true);
       });
@@ -92,7 +100,11 @@ export class UserModalComponent implements OnInit {
   deleteUser() {
     if (this.data.user && confirm(`Tem certeza que deseja excluir o usuário ${this.data.user.name}?`)) {
       this.loading = true;
-      this.userService.deleteUser(this.data.user.id!).subscribe({
+      const deleteCall = this.data.type === 'Platform'
+        ? this.userService.deletePlatformUser(this.data.user.id!)
+        : this.userService.deleteUser(this.data.user.id!);
+
+      deleteCall.subscribe({
         next: () => {
           this.snackBar.open(this.translate.instant('SNACKBAR.DELETE_SUCCESS'), this.translate.instant('SNACKBAR.CLOSE'), { duration: 3000 });
           this.dialogRef.close(true);

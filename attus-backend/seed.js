@@ -33,6 +33,7 @@ function seed() {
       cpf,
       phone,
       phoneType: 'celular',
+      type: 'App',
       role,
       password: '' // fake users without password
     });

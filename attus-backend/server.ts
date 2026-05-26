@@ -25,6 +25,7 @@ if (!fs.existsSync(DB_FILE)) {
         email: 'gustavo.koglin@teste.com',
         password: adminPassword,
         role: 'Admin',
+        type: 'Platform',
         cpf: '000.000.000-00',
         phone: '00000000000',
         phoneType: 'celular'
@@ -107,11 +108,11 @@ app.post('/api/login', (req: Request, res: Response) => {
   res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
 });
 
-// Listar Usuários (todos logados podem ver)
+// Listar Usuários do App
 app.get('/api/users', authMiddleware, (req: AuthRequest, res: Response) => {
   const db = readDB();
   const safeUsers = db.users
-    .filter((u: any) => u.id !== req.user.id)
+    .filter((u: any) => u.type !== 'Platform' && u.type !== 'Admin') // fallbacks
     .map((u: any) => {
       const { password, ...rest } = u;
       return rest;
@@ -135,6 +136,7 @@ app.post('/api/users', authMiddleware, roleMiddleware(['Admin', 'Editor']), (req
     cpf,
     phone,
     phoneType,
+    type: 'App',
     role: role || 'Visualizador', // Fallback
     password: password ? bcrypt.hashSync(password, 10) : ''
   };
@@ -201,6 +203,77 @@ app.delete('/api/users/:id', authMiddleware, roleMiddleware(['Admin', 'Editor'])
 app.get('/api/logs', authMiddleware, roleMiddleware(['Admin']), (req: AuthRequest, res: Response) => {
   const db = readDB();
   res.json(db.logs);
+});
+
+// --- PLATFORM USERS ENDPOINTS ---
+app.get('/api/platform-users', authMiddleware, roleMiddleware(['Admin', 'Editor']), (req: AuthRequest, res: Response) => {
+  const db = readDB();
+  const platformUsers = db.users
+    .filter((u: any) => u.type === 'Platform' || u.role === 'Admin')
+    .map((u: any) => {
+      const { password, ...rest } = u;
+      return rest;
+    });
+  res.json(platformUsers);
+});
+
+app.post('/api/platform-users', authMiddleware, roleMiddleware(['Admin']), (req: AuthRequest, res: Response) => {
+  const db = readDB();
+  const { name, email, role, password } = req.body;
+  if (db.users.find((u: any) => u.email === email)) {
+    return res.status(400).json({ message: 'E-mail já cadastrado' });
+  }
+  const newUser = {
+    id: uuidv4(),
+    name,
+    email,
+    type: 'Platform',
+    role: role || 'Visualizador',
+    password: password ? bcrypt.hashSync(password, 10) : ''
+  };
+  db.users.push(newUser);
+  writeDB(db);
+  addLog(`Criou o usuário de painel ${name} (${email})`, req.user.name, req.user.email, req.ip || '0.0.0.0');
+  const { password: _, ...safeUser } = newUser;
+  res.status(201).json(safeUser);
+});
+
+app.put('/api/platform-users/:id', authMiddleware, roleMiddleware(['Admin']), (req: AuthRequest, res: Response) => {
+  const db = readDB();
+  const index = db.users.findIndex((u: any) => u.id === req.params.id);
+  if (index === -1) return res.status(404).json({ message: 'Usuário não encontrado' });
+
+  const { name, email, role, password } = req.body;
+  const oldUser = db.users[index];
+
+  db.users[index] = {
+    ...oldUser,
+    name: name || oldUser.name,
+    email: email || oldUser.email,
+    role: role || oldUser.role,
+    password: password ? bcrypt.hashSync(password, 10) : oldUser.password
+  };
+
+  writeDB(db);
+  addLog(`Editou o usuário de painel ${db.users[index].name}`, req.user.name, req.user.email, req.ip || '0.0.0.0');
+  const { password: _, ...safeUser } = db.users[index];
+  res.json(safeUser);
+});
+
+app.delete('/api/platform-users/:id', authMiddleware, roleMiddleware(['Admin']), (req: AuthRequest, res: Response) => {
+  const db = readDB();
+  const index = db.users.findIndex((u: any) => u.id === req.params.id);
+  if (index === -1) return res.status(404).json({ message: 'Usuário não encontrado' });
+  
+  if (db.users[index].id === req.user.id) {
+    return res.status(400).json({ message: 'Não pode excluir o próprio usuário' });
+  }
+
+  const user = db.users[index];
+  db.users.splice(index, 1);
+  writeDB(db);
+  addLog(`Deletou o usuário de painel ${user.name}`, req.user.name, req.user.email, req.ip || '0.0.0.0');
+  res.status(204).send();
 });
 
 app.listen(PORT, () => {

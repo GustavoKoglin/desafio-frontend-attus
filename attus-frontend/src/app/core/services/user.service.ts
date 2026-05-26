@@ -8,26 +8,24 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/api/users';
+  private apiUrl = 'http://localhost:3000/api';
   private http = inject(HttpClient);
 
-  // Estado local com Signals (opcional, ou podemos buscar toda vez)
   private _users = signal<User[]>([]);
   public users = this._users.asReadonly();
   
-  // Os logs agora vêm da API
   public logs = signal<any[]>([]);
 
   constructor() { }
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.apiUrl).pipe(
+    return this.http.get<User[]>(`${this.apiUrl}/users`).pipe(
       tap(users => this._users.set(users))
     );
   }
 
   addUser(user: any): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user).pipe(
+    return this.http.post<User>(`${this.apiUrl}/users`, user).pipe(
       tap(newUser => {
         this._users.update(users => [...users, newUser]);
       })
@@ -35,7 +33,7 @@ export class UserService {
   }
 
   updateUser(updatedUser: any): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${updatedUser.id}`, updatedUser).pipe(
+    return this.http.put<User>(`${this.apiUrl}/users/${updatedUser.id}`, updatedUser).pipe(
       tap(user => {
         this._users.update(users => users.map(u => u.id === user.id ? user : u));
       })
@@ -43,10 +41,26 @@ export class UserService {
   }
 
   deleteUser(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.delete<void>(`${this.apiUrl}/users/${id}`).pipe(
       tap(() => {
         this._users.update(users => users.filter(u => u.id !== id));
       })
     );
+  }
+
+  getPlatformUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/platform-users`);
+  }
+
+  createPlatformUser(user: Partial<User>): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/platform-users`, user);
+  }
+
+  updatePlatformUser(id: string, user: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/platform-users/${id}`, user);
+  }
+
+  deletePlatformUser(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/platform-users/${id}`);
   }
 }
