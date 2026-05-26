@@ -75,6 +75,15 @@
   background-color: #2196f3; /* Azul Material */
 }
 
+.profile-info-card {
+  max-width: 400px;
+  cursor: default !important;
+}
+.profile-info-card:hover {
+  transform: none;
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12); /* Default mat-card shadow */
+}
+
 .logs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

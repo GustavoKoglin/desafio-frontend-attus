@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserService } from '../../core/services/user.service';
+import { AuthService } from '../../core/services/auth.service';
 import { UserModalComponent } from '../user-modal/user-modal.component';
 import { User } from '../../core/models/user';
 
@@ -32,15 +33,25 @@ export class AdminLogsComponent implements OnInit {
   platformUsers: User[] = [];
   loading = true;
   loadingUsers = true;
+  currentUser: any = null;
 
   private http = inject(HttpClient);
   private router = inject(Router);
   private userService = inject(UserService);
   private dialog = inject(MatDialog);
+  public authService = inject(AuthService);
+
+  get isAdmin() {
+    return this.authService.hasRole(['Admin']);
+  }
 
   ngOnInit() {
-    this.fetchLogs();
-    this.fetchPlatformUsers();
+    this.currentUser = this.authService.getCurrentUser();
+    
+    if (this.isAdmin) {
+      this.fetchLogs();
+      this.fetchPlatformUsers();
+    }
   }
 
   fetchLogs() {

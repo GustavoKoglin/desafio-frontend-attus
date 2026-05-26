@@ -1,6 +1,6 @@
 <div class="list-container">
   <div class="header-container">
-    <h2>Painel Administrativo</h2>
+    <h2>Painel</h2>
     <button mat-stroked-button (click)="goBack()">
       <mat-icon>arrow_back</mat-icon>
       Voltar para o App
@@ -8,8 +8,30 @@
   </div>
 
   <mat-tab-group animationDuration="0ms">
+    <!-- ABA 0: Meu Perfil -->
+    <mat-tab label="Meu Perfil">
+      <div class="tab-content">
+        <div class="tab-header">
+          <p>Detalhes da sua conta e permissões atuais.</p>
+        </div>
+        @if (currentUser) {
+          <mat-card class="user-card profile-info-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar color="primary">account_circle</mat-icon>
+              <mat-card-title>{{ currentUser.name }}</mat-card-title>
+              <mat-card-subtitle>{{ currentUser.email }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p><strong>Cargo (Role):</strong> {{ currentUser.role }}</p>
+              <p><strong>Fuso Horário:</strong> {{ currentUser.timezone }}</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    </mat-tab>
+
     <!-- ABA 1: Logs de Auditoria -->
-    <mat-tab label="Logs de Auditoria">
+    <mat-tab label="Logs de Auditoria" *ngIf="isAdmin">
       <div class="tab-content">
         @if (loading) {
           <p>Carregando logs...</p>
@@ -35,7 +57,7 @@
     </mat-tab>
 
     <!-- ABA 2: Usuários da Plataforma -->
-    <mat-tab label="Usuários do Painel">
+    <mat-tab label="Usuários do Painel" *ngIf="isAdmin">
       <div class="tab-content">
         <div class="tab-header">
           <div class="header-text">
@@ -47,11 +69,11 @@
               </div>
               <div class="legend-item">
                 <span class="legend-dot editor"></span>
-                <strong>Editor:</strong> Pode adicionar, editar e excluir usuários.
+                <strong>Editor:</strong> Pode adicionar, editar e excluir usuários do App.
               </div>
               <div class="legend-item">
                 <span class="legend-dot viewer"></span>
-                <strong>Visualizador:</strong> Pode apenas visualizar e pesquisar usuários.
+                <strong>Visualizador:</strong> Pode apenas visualizar e pesquisar usuários do App.
               </div>
             </div>
           </div>
