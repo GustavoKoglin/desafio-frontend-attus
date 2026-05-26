@@ -81,10 +81,10 @@ export class UserListComponent implements OnInit {
   isDarkMode = false;
   currentLang = 'pt-br';
   languages = [
-    { code: 'pt-br', name: 'Português', flag: '🇧🇷' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' }
+    { code: 'pt-br', name: 'Português', countryCode: 'br' },
+    { code: 'en', name: 'English', countryCode: 'us' },
+    { code: 'es', name: 'Español', countryCode: 'es' },
+    { code: 'fr', name: 'Français', countryCode: 'fr' }
   ];
 
   get currentLangData() {

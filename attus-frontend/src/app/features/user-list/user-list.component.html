@@ -4,7 +4,7 @@
     
     <div class="controls">
       <button mat-stroked-button [matMenuTriggerFor]="langMenu" class="lang-button">
-        <span class="flag-icon">{{ currentLangData.flag }}</span>
+        <img [src]="'https://flagcdn.com/w20/' + currentLangData.countryCode + '.png'" width="20" alt="Flag" class="flag-icon">
         <span class="lang-name">{{ currentLangData.name }}</span>
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
@@ -12,7 +12,7 @@
       <mat-menu #langMenu="matMenu" class="lang-menu-panel">
         @for (lang of languages; track lang.code) {
           <button mat-menu-item (click)="changeLang(lang.code)">
-            <span class="flag-icon">{{ lang.flag }}</span>
+            <img [src]="'https://flagcdn.com/w20/' + lang.countryCode + '.png'" width="20" alt="Flag" class="flag-icon">
             <span>{{ lang.name }}</span>
           </button>
         }
