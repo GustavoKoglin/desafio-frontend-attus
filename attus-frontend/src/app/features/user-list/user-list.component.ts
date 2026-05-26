@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -27,7 +28,8 @@ import { UserModalComponent } from '../user-modal/user-modal.component';
     MatIconModule,
     MatProgressSpinnerModule,
     MatDialogModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSnackBarModule
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
@@ -35,6 +37,7 @@ import { UserModalComponent } from '../user-modal/user-modal.component';
 export class UserListComponent implements OnInit {
   private userService = inject(UserService);
   private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
 
   searchControl = new FormControl('');
@@ -43,6 +46,8 @@ export class UserListComponent implements OnInit {
   paginatedUsers = signal<User[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
+
+  logs = this.userService.logs;
 
   totalItems = signal<number>(0);
   pageSize = signal<number>(5);
@@ -120,9 +125,25 @@ export class UserListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Recarregar os dados na view se algo mudou
+        this.snackBar.open(user ? 'Usuário editado com sucesso!' : 'Usuário criado com sucesso!', 'Fechar', { duration: 3000 });
         this.searchControl.setValue(this.searchControl.value); // Triggers re-search and updates UI
       }
     });
+  }
+
+  deleteUser(user: User) {
+    if (confirm(`Tem certeza que deseja excluir o usuário ${user.name}?`)) {
+      this.loading.set(true);
+      this.userService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.snackBar.open('Usuário excluído com sucesso!', 'Fechar', { duration: 3000 });
+          this.searchControl.setValue(this.searchControl.value);
+        },
+        error: () => {
+          this.error.set('Erro ao excluir usuário.');
+          this.loading.set(false);
+        }
+      });
+    }
   }
 }

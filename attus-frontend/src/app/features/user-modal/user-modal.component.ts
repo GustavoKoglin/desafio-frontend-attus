@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NgxMaskDirective } from 'ngx-mask';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 export function cpfValidator(control: AbstractControl): ValidationErrors | null {
   const cpf = control.value;
@@ -28,7 +29,8 @@ export function cpfValidator(control: AbstractControl): ValidationErrors | null 
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    NgxMaskDirective
+    NgxMaskDirective,
+    MatSnackBarModule
   ],
   templateUrl: './user-modal.component.html',
   styleUrls: ['./user-modal.component.css']
@@ -36,14 +38,13 @@ export function cpfValidator(control: AbstractControl): ValidationErrors | null 
 export class UserModalComponent implements OnInit {
   userForm!: FormGroup;
   isEditMode = false;
-  saving = false;
+  loading = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<UserModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { user?: User },
-    private userService: UserService
-  ) {}
+  private fb = inject(FormBuilder);
+  private userService = inject(UserService);
+  private dialogRef = inject(MatDialogRef<UserModalComponent>);
+  private snackBar = inject(MatSnackBar);
+  public data = inject<{ user?: User }>(MAT_DIALOG_DATA);
 
   ngOnInit() {
     this.isEditMode = !!this.data.user;
@@ -61,22 +62,34 @@ export class UserModalComponent implements OnInit {
   save() {
     if (this.userForm.invalid) return;
     
-    this.saving = true;
+    this.loading = true;
     const userData = this.userForm.value;
 
-    const request$ = this.isEditMode 
-      ? this.userService.updateUser(userData)
-      : this.userService.addUser(userData);
-
-    request$.subscribe({
-      next: () => {
-        this.saving = false;
+    if (this.isEditMode) {
+      this.userService.updateUser({ ...this.data.user, ...userData }).subscribe(() => {
+        this.loading = false;
         this.dialogRef.close(true);
-      },
-      error: () => {
-        this.saving = false;
-        // Tratamento de erro poderia ser adicionado aqui (ex: Snackbar)
-      }
-    });
+      });
+    } else {
+      this.userService.addUser(userData).subscribe(() => {
+        this.loading = false;
+        this.dialogRef.close(true);
+      });
+    }
+  }
+
+  deleteUser() {
+    if (this.data.user && confirm(`Tem certeza que deseja excluir o usuário ${this.data.user.name}?`)) {
+      this.loading = true;
+      this.userService.deleteUser(this.data.user.id!).subscribe({
+        next: () => {
+          this.snackBar.open('Usuário excluído com sucesso!', 'Fechar', { duration: 3000 });
+          this.dialogRef.close(true);
+        },
+        error: () => {
+          this.loading = false;
+        }
+      });
+    }
   }
 }

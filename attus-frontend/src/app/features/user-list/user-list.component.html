@@ -41,6 +41,9 @@
             <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions align="end">
+            <button mat-button color="warn" (click)="deleteUser(user)">
+              <mat-icon>delete</mat-icon> Excluir
+            </button>
             <button mat-button color="primary" (click)="openUserModal(user)">
               <mat-icon>edit</mat-icon> Editar
             </button>
@@ -56,5 +59,20 @@
       (page)="handlePageEvent($event)"
       aria-label="Selecionar página">
     </mat-paginator>
+  }
+
+  <!-- Logs Section -->
+  @if (logs().length > 0) {
+    <div class="logs-container">
+      <h3>Histórico de Ações</h3>
+      <ul>
+        @for (log of logs(); track log.date) {
+          <li>
+            <span class="log-date">{{ log.date | date:'shortTime' }}</span> 
+            {{ log.message }}
+          </li>
+        }
+      </ul>
+    </div>
   }
 </div>
