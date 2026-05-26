@@ -56,6 +56,9 @@ export class UserModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.translate.setDefaultLang('pt-br');
+    this.translate.use(this.translate.currentLang || this.translate.getDefaultLang() || 'pt-br');
+    
     this.isEditMode = !!this.data.user;
     
     this.userForm = this.fb.group({
