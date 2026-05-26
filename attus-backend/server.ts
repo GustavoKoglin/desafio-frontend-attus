@@ -112,7 +112,7 @@ app.post('/api/login', (req: Request, res: Response) => {
 app.get('/api/users', authMiddleware, (req: AuthRequest, res: Response) => {
   const db = readDB();
   const safeUsers = db.users
-    .filter((u: any) => u.type !== 'Platform' && u.type !== 'Admin') // fallbacks
+    .filter((u: any) => !u.role && u.type !== 'Platform') // Filtra quem tem cargo ou é da plataforma
     .map((u: any) => {
       const { password, ...rest } = u;
       return rest;
