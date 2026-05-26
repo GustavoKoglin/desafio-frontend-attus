@@ -34,9 +34,27 @@
         </button>
       }
 
-      <button mat-icon-button color="warn" (click)="logout()" aria-label="Sair">
-        <mat-icon>logout</mat-icon>
+      <button mat-stroked-button [matMenuTriggerFor]="profileMenu" class="profile-button">
+        <mat-icon>person</mat-icon>
+        <span class="user-name">{{ authService.currentUser()?.name?.split(' ')[0] || 'Perfil' }}</span>
+        <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
+
+      <mat-menu #profileMenu="matMenu">
+        <div class="profile-header">
+          <strong>{{ authService.currentUser()?.name }}</strong>
+          <small>{{ authService.currentUser()?.role }}</small>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item>
+          <mat-icon>account_circle</mat-icon>
+          <span>Meu Perfil</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon color="warn">logout</mat-icon>
+          <span class="text-warn">Sair</span>
+        </button>
+      </mat-menu>
     </div>
   </div>
 

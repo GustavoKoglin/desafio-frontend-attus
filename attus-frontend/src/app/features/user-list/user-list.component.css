@@ -59,6 +59,39 @@
   border-radius: 8px;
 }
 
+.theme-button {
+  margin-left: 8px;
+}
+
+.profile-button {
+  border-radius: 20px;
+  padding: 0 8px 0 4px;
+  margin-left: 8px;
+}
+
+.profile-button .mat-icon {
+  margin-right: 4px;
+}
+
+.profile-header {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  outline: none;
+}
+
+.profile-header strong {
+  font-size: 16px;
+}
+
+.profile-header small {
+  color: var(--text-color, #666);
+}
+
+.text-warn {
+  color: #f44336;
+}
+
 .w-100 {
   width: 100%;
 }

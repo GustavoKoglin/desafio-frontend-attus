@@ -21,6 +21,8 @@ import { User } from '../../core/models/user';
 import { UserModalComponent } from '../user-modal/user-modal.component';
 import { Router } from '@angular/router';
 
+import { MatDividerModule } from '@angular/material/divider';
+
 @Injectable()
 export class CustomPaginatorIntl extends MatPaginatorIntl {
   private translate = inject(TranslateService);
@@ -65,7 +67,8 @@ export class CustomPaginatorIntl extends MatPaginatorIntl {
     MatSnackBarModule,
     TranslateModule,
     MatSelectModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDividerModule
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
