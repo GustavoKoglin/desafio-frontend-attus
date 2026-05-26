@@ -48,6 +48,6 @@
     "OF": "of"
   },
   "PROFILE": {
-    "NO_PASSWORD_CHANGE_DEMO": "As this is a demonstration, password change functionality has not been implemented!"
+    "NO_PASSWORD_CHANGE_DEMO": "As this is a demonstration, password change functionality, CPF validation, CPF and Phone required fields, and photo upload have not been implemented."
   }
 }

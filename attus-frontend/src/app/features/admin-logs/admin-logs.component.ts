@@ -89,8 +89,8 @@ export class AdminLogsComponent implements OnInit {
     this.profileForm = this.fb.group({
       name: [this.currentUser?.name || '', Validators.required],
       email: [{ value: this.currentUser?.email || '', disabled: true }],
-      cpf: [this.currentUser?.cpf || '', Validators.required],
-      phone: [this.currentUser?.phone || '', Validators.required]
+      cpf: [this.currentUser?.cpf || ''],
+      phone: [this.currentUser?.phone || '']
     });
   }
 

@@ -48,6 +48,6 @@
     "OF": "de"
   },
   "PROFILE": {
-    "NO_PASSWORD_CHANGE_DEMO": "Por ser uma demonstração, não foi implementada a funcionalidade de alteração de senha!"
+    "NO_PASSWORD_CHANGE_DEMO": "Por ser uma demonstração, não foi implementada a funcionalidade de alteração de senha, validação de CPF, obrigatoriedade de preenchimento de CPF e Telefone, e nem upload de foto."
   }
 }
