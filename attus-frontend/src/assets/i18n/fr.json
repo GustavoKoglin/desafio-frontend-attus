@@ -39,5 +39,12 @@
     "ADD_SUCCESS": "Utilisateur créé avec succès!",
     "DELETE_SUCCESS": "Utilisateur supprimé avec succès!",
     "CLOSE": "Fermer"
+  },
+  "PAGINATOR": {
+    "ITEMS_PER_PAGE": "Éléments par page:",
+    "ALL": "Tous",
+    "NEXT_PAGE": "Page suivante",
+    "PREV_PAGE": "Page précédente",
+    "OF": "sur"
   }
 }

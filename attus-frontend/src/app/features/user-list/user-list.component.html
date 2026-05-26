@@ -66,13 +66,25 @@
       }
     </div>
 
-    <mat-paginator
-      [length]="totalItems()"
-      [pageSize]="pageSize()"
-      [pageSizeOptions]="[5, 10, 25, 100]"
-      (page)="handlePageEvent($event)"
-      aria-label="Selecionar página">
-    </mat-paginator>
+    <div class="paginator-wrapper">
+      <div class="custom-page-size">
+        <span>{{ 'PAGINATOR.ITEMS_PER_PAGE' | translate }}</span>
+        <mat-select [value]="pageSize()" (selectionChange)="changePageSize($event.value)" class="page-size-select" panelClass="paginator-select-panel">
+          <mat-option [value]="5">5</mat-option>
+          <mat-option [value]="10">10</mat-option>
+          <mat-option [value]="25">25</mat-option>
+          <mat-option [value]="10000">{{ 'PAGINATOR.ALL' | translate }}</mat-option>
+        </mat-select>
+      </div>
+
+      <mat-paginator
+        [hidePageSize]="true"
+        [length]="totalItems()"
+        [pageSize]="pageSize()"
+        (page)="handlePageEvent($event)"
+        aria-label="Selecionar página">
+      </mat-paginator>
+    </div>
   }
 
   <!-- Logs Section -->

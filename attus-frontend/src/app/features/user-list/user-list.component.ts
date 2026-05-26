@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { Component, OnInit, inject, signal, Injectable, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent, MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
@@ -18,6 +18,34 @@ import { of } from 'rxjs';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user';
 import { UserModalComponent } from '../user-modal/user-modal.component';
+
+@Injectable()
+export class CustomPaginatorIntl extends MatPaginatorIntl {
+  private translate = inject(TranslateService);
+
+  constructor() {
+    super();
+    this.translate.onLangChange.subscribe(() => this.getTranslations());
+    this.getTranslations();
+  }
+
+  getTranslations() {
+    this.itemsPerPageLabel = this.translate.instant('PAGINATOR.ITEMS_PER_PAGE');
+    this.nextPageLabel = this.translate.instant('PAGINATOR.NEXT_PAGE');
+    this.previousPageLabel = this.translate.instant('PAGINATOR.PREV_PAGE');
+    this.changes.next();
+  }
+
+  override getRangeLabel = (page: number, pageSize: number, length: number) => {
+    if (length === 0 || pageSize === 0) {
+      return `0 ${this.translate.instant('PAGINATOR.OF')} ${length}`;
+    }
+    length = Math.max(length, 0);
+    const startIndex = page * pageSize;
+    const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+    return `${startIndex + 1} – ${endIndex} ${this.translate.instant('PAGINATOR.OF')} ${length}`;
+  };
+}
 
 @Component({
   selector: 'app-user-list',
@@ -38,7 +66,10 @@ import { UserModalComponent } from '../user-modal/user-modal.component';
     MatMenuModule
   ],
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
+  styleUrls: ['./user-list.component.css'],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }
+  ]
 })
 export class UserListComponent implements OnInit {
   private userService = inject(UserService);
@@ -113,8 +144,14 @@ export class UserListComponent implements OnInit {
   }
 
   handlePageEvent(e: PageEvent) {
-    this.currentPage.set(e.pageIndex);
     this.pageSize.set(e.pageSize);
+    this.currentPage.set(e.pageIndex);
+    this.updatePagination();
+  }
+
+  changePageSize(size: number) {
+    this.pageSize.set(size);
+    this.currentPage.set(0);
     this.updatePagination();
   }
 

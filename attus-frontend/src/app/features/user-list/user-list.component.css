@@ -74,6 +74,36 @@
   box-shadow: 0 4px 15px var(--shadow-color);
 }
 
+.paginator-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 0 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.custom-page-size {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.page-size-select {
+  width: 85px;
+}
+
+::ng-deep .paginator-wrapper .mat-mdc-paginator {
+  background: transparent !important;
+}
+
 .user-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px var(--shadow-hover);
