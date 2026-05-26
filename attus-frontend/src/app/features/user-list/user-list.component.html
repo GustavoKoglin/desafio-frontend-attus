@@ -1,20 +1,24 @@
 <div class="list-container">
-  <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <div class="header-container">
     <h2>{{ 'HEADER.TITLE' | translate }}</h2>
     
-    <div class="controls" style="display: flex; gap: 15px; align-items: center;">
-      <mat-form-field appearance="outline" style="width: 120px; margin-bottom: -1.25em;">
-        <mat-label>{{ 'HEADER.LANGUAGE' | translate }}</mat-label>
-        <mat-select [value]="currentLang" (selectionChange)="changeLang($event.value)">
-          @for (lang of languages; track lang) {
-            <mat-option [value]="lang">
-              {{ lang | uppercase }}
-            </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+    <div class="controls">
+      <button mat-stroked-button [matMenuTriggerFor]="langMenu" class="lang-button">
+        <span class="flag-icon">{{ currentLangData.flag }}</span>
+        <span class="lang-name">{{ currentLangData.name }}</span>
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+
+      <mat-menu #langMenu="matMenu" class="lang-menu-panel">
+        @for (lang of languages; track lang.code) {
+          <button mat-menu-item (click)="changeLang(lang.code)">
+            <span class="flag-icon">{{ lang.flag }}</span>
+            <span>{{ lang.name }}</span>
+          </button>
+        }
+      </mat-menu>
       
-      <button mat-icon-button (click)="toggleTheme()" [attr.aria-label]="'HEADER.DARK_MODE' | translate">
+      <button mat-icon-button (click)="toggleTheme()" [attr.aria-label]="'HEADER.DARK_MODE' | translate" class="theme-button">
         <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 

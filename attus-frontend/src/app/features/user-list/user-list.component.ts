@@ -12,6 +12,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { UserService } from '../../core/services/user.service';
@@ -33,7 +34,8 @@ import { UserModalComponent } from '../user-modal/user-modal.component';
     MatPaginatorModule,
     MatSnackBarModule,
     TranslateModule,
-    MatSelectModule
+    MatSelectModule,
+    MatMenuModule
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
@@ -47,7 +49,16 @@ export class UserListComponent implements OnInit {
 
   isDarkMode = false;
   currentLang = 'pt-br';
-  languages = ['pt-br', 'en', 'es', 'fr'];
+  languages = [
+    { code: 'pt-br', name: 'Português', flag: '🇧🇷' },
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' }
+  ];
+
+  get currentLangData() {
+    return this.languages.find(l => l.code === this.currentLang) || this.languages[0];
+  }
 
   searchControl = new FormControl('');
   

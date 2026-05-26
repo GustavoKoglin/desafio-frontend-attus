@@ -1,25 +1,61 @@
 .list-container {
+  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
+.header-container {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 20px;
+  padding: 10px 0 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--bg-color);
+  transition: background-color 0.3s ease;
+}
+
+.controls {
+  display: flex; 
+  gap: 15px; 
   align-items: center;
-  margin-bottom: 2rem;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 500;
+.lang-button {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  padding: 0 16px;
+  height: 40px;
+  background-color: transparent;
+  color: var(--text-color);
+  cursor: pointer;
 }
 
-.search-bar {
+.lang-button .mdc-button__label {
+  display: flex;
+  align-items: center;
+}
+
+.flag-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.lang-name {
+  margin-right: 4px;
+}
+
+.theme-button {
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+}
+
+.w-100 {
   width: 100%;
-  margin-bottom: 2rem;
 }
 
 .grid {
