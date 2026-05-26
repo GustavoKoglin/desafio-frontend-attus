@@ -1,33 +1,43 @@
 <div class="list-container">
-  <div class="header">
-    <h1>Listagem de Usuários</h1>
-    <button mat-flat-button color="warn" (click)="openUserModal()">+ Cadastrar Usuário</button>
+  <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>{{ 'HEADER.TITLE' | translate }}</h2>
+    
+    <div class="controls" style="display: flex; gap: 15px; align-items: center;">
+      <mat-form-field appearance="outline" style="width: 120px; margin-bottom: -1.25em;">
+        <mat-label>{{ 'HEADER.LANGUAGE' | translate }}</mat-label>
+        <mat-select [value]="currentLang" (selectionChange)="changeLang($event.value)">
+          @for (lang of languages; track lang) {
+            <mat-option [value]="lang">
+              {{ lang | uppercase }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      
+      <button mat-icon-button (click)="toggleTheme()" [attr.aria-label]="'HEADER.DARK_MODE' | translate">
+        <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+
+      <button mat-raised-button color="warn" (click)="openUserModal()">
+        + {{ 'HEADER.ADD_USER' | translate }}
+      </button>
+    </div>
   </div>
 
-  <mat-form-field appearance="outline" class="search-bar">
-    <mat-label>Buscar por nome</mat-label>
+  <mat-form-field appearance="outline" class="w-100">
     <mat-icon matPrefix>search</mat-icon>
-    <input matInput [formControl]="searchControl" placeholder="Digite o nome..." />
+    <input matInput [formControl]="searchControl" [placeholder]="'SEARCH.PLACEHOLDER' | translate">
   </mat-form-field>
 
   @if (loading()) {
     <div class="loading-state">
       <mat-spinner diameter="40"></mat-spinner>
-      <p>Carregando usuários...</p>
     </div>
   }
 
   @if (error()) {
     <div class="error-state">
-      <mat-icon color="warn">error</mat-icon>
       <p>{{ error() }}</p>
-      <button mat-stroked-button (click)="loadInitialUsers()">Tentar Novamente</button>
-    </div>
-  }
-
-  @if (!loading() && !error() && users().length === 0) {
-    <div class="empty-state">
-      <p>Nenhum usuário encontrado.</p>
     </div>
   }
 
@@ -42,10 +52,10 @@
           </mat-card-header>
           <mat-card-actions align="end">
             <button mat-button color="warn" (click)="deleteUser(user)">
-              <mat-icon>delete</mat-icon> Excluir
+              <mat-icon>delete</mat-icon> {{ 'CARD.DELETE' | translate }}
             </button>
             <button mat-button color="primary" (click)="openUserModal(user)">
-              <mat-icon>edit</mat-icon> Editar
+              <mat-icon>edit</mat-icon> {{ 'CARD.EDIT' | translate }}
             </button>
           </mat-card-actions>
         </mat-card>
@@ -64,7 +74,7 @@
   <!-- Logs Section -->
   @if (logs().length > 0) {
     <div class="logs-container">
-      <h3>Histórico de Ações</h3>
+      <h3>{{ 'LOGS.TITLE' | translate }}</h3>
       <ul>
         @for (log of logs(); track log.date) {
           <li>

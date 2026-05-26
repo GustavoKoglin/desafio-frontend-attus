@@ -4,5 +4,5 @@ export interface User {
   email: string;
   cpf: string;
   phone: string;
-  phoneType: 'celular' | 'residencial' | 'comercial';
+  phoneType: 'celular' | 'residencial' | 'trabalho' | 'comercial';
 }

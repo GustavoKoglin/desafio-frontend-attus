@@ -1,0 +1,43 @@
+{
+  "HEADER": {
+    "TITLE": "Listagem de Usuários",
+    "ADD_USER": "Cadastrar Usuário",
+    "DARK_MODE": "Tema",
+    "LANGUAGE": "Idioma"
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "Buscar por nome"
+  },
+  "CARD": {
+    "DELETE": "Excluir",
+    "EDIT": "Editar"
+  },
+  "LOGS": {
+    "TITLE": "Histórico de Ações",
+    "CREATED": "Usuário {{name}} criado com sucesso.",
+    "EDITED": "Usuário {{name}} editado.",
+    "DELETED": "Usuário {{name}} excluído."
+  },
+  "MODAL": {
+    "EDIT_TITLE": "Editar Usuário",
+    "ADD_TITLE": "Cadastrar Usuário",
+    "FULL_NAME": "Nome Completo",
+    "EMAIL": "E-mail",
+    "CPF": "CPF",
+    "PHONE": "Telefone",
+    "PHONE_TYPE": "Tipo de Telefone",
+    "CELLPHONE": "Celular",
+    "RESIDENTIAL": "Residencial",
+    "WORK": "Trabalho",
+    "CANCEL": "Cancelar",
+    "SAVE": "Salvar",
+    "ERROR_CPF": "O CPF é obrigatório",
+    "ERROR_PHONE": "O telefone é obrigatório"
+  },
+  "SNACKBAR": {
+    "EDIT_SUCCESS": "Usuário editado com sucesso!",
+    "ADD_SUCCESS": "Usuário criado com sucesso!",
+    "DELETE_SUCCESS": "Usuário excluído com sucesso!",
+    "CLOSE": "Fechar"
+  }
+}

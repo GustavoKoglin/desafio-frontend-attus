@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -14,7 +15,10 @@ describe('UserListComponent', () => {
 
   beforeEach(async () => {
     mockUserService = {
-      getUsers: jest.fn().mockReturnValue(of([]))
+      users: signal([]),
+      logs: signal([]),
+      getUsers: jest.fn().mockReturnValue(of([])),
+      deleteUser: jest.fn().mockReturnValue(of({}))
     };
 
     mockDialog = {
@@ -22,7 +26,7 @@ describe('UserListComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [UserListComponent, BrowserAnimationsModule], // Removed MatDialogModule to use custom mock
+      imports: [UserListComponent, BrowserAnimationsModule, TranslateModule.forRoot()], // Removed MatDialogModule to use custom mock
       providers: [
         { provide: UserService, useValue: mockUserService },
         { provide: MatDialog, useValue: mockDialog },

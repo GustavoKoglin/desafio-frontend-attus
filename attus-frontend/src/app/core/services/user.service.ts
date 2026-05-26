@@ -10,7 +10,17 @@ export class UserService {
   // Estado local com Signals
   private _users = signal<User[]>([
     { id: '1', name: 'João Silva', email: 'joao@email.com', cpf: '123.456.789-00', phone: '(11) 99999-9999', phoneType: 'celular' },
-    { id: '2', name: 'Maria Souza', email: 'maria@email.com', cpf: '987.654.321-11', phone: '(11) 3333-3333', phoneType: 'residencial' }
+    { id: '2', name: 'Maria Souza', email: 'maria@email.com', cpf: '987.654.321-11', phone: '(11) 3333-3333', phoneType: 'residencial' },
+    { id: '3', name: 'Carlos Santos', email: 'carlos@email.com', cpf: '111.222.333-44', phone: '(21) 98888-8888', phoneType: 'celular' },
+    { id: '4', name: 'Ana Oliveira', email: 'ana@email.com', cpf: '222.333.444-55', phone: '(31) 3222-2222', phoneType: 'trabalho' },
+    { id: '5', name: 'Pedro Costa', email: 'pedro@email.com', cpf: '333.444.555-66', phone: '(41) 97777-7777', phoneType: 'celular' },
+    { id: '6', name: 'Luciana Lima', email: 'luciana@email.com', cpf: '444.555.666-77', phone: '(51) 3344-5566', phoneType: 'residencial' },
+    { id: '7', name: 'Rafael Pereira', email: 'rafael@email.com', cpf: '555.666.777-88', phone: '(61) 96666-6666', phoneType: 'celular' },
+    { id: '8', name: 'Camila Fernandes', email: 'camila@email.com', cpf: '666.777.888-99', phone: '(71) 3355-7788', phoneType: 'trabalho' },
+    { id: '9', name: 'Bruno Alves', email: 'bruno@email.com', cpf: '777.888.999-00', phone: '(81) 95555-5555', phoneType: 'celular' },
+    { id: '10', name: 'Fernanda Rocha', email: 'fernanda@email.com', cpf: '888.999.000-11', phone: '(91) 3366-9900', phoneType: 'residencial' },
+    { id: '11', name: 'Marcos Ribeiro', email: 'marcos@email.com', cpf: '999.000.111-22', phone: '(85) 94444-4444', phoneType: 'celular' },
+    { id: '12', name: 'Juliana Mendes', email: 'juliana@email.com', cpf: '000.111.222-33', phone: '(98) 3377-1122', phoneType: 'trabalho' }
   ]);
   
   private _logs = signal<{date: Date, message: string}[]>([]);

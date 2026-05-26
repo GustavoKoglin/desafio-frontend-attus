@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService } from '../../core/services/user.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 
@@ -19,7 +20,7 @@ describe('UserModalComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [UserModalComponent, BrowserAnimationsModule],
+      imports: [UserModalComponent, BrowserAnimationsModule, TranslateModule.forRoot()],
       providers: [
         { provide: MatDialogRef, useValue: { close: jest.fn() } },
         { provide: MAT_DIALOG_DATA, useValue: {} },

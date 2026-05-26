@@ -10,6 +10,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export function cpfValidator(control: AbstractControl): ValidationErrors | null {
   const cpf = control.value;
@@ -30,7 +31,8 @@ export function cpfValidator(control: AbstractControl): ValidationErrors | null 
     MatSelectModule,
     MatButtonModule,
     NgxMaskDirective,
-    MatSnackBarModule
+    MatSnackBarModule,
+    TranslateModule
   ],
   templateUrl: './user-modal.component.html',
   styleUrls: ['./user-modal.component.css']
@@ -44,6 +46,7 @@ export class UserModalComponent implements OnInit {
   private userService = inject(UserService);
   private dialogRef = inject(MatDialogRef<UserModalComponent>);
   private snackBar = inject(MatSnackBar);
+  public translate = inject(TranslateService);
   public data = inject<{ user?: User }>(MAT_DIALOG_DATA);
 
   ngOnInit() {
@@ -83,7 +86,7 @@ export class UserModalComponent implements OnInit {
       this.loading = true;
       this.userService.deleteUser(this.data.user.id!).subscribe({
         next: () => {
-          this.snackBar.open('Usuário excluído com sucesso!', 'Fechar', { duration: 3000 });
+          this.snackBar.open(this.translate.instant('SNACKBAR.DELETE_SUCCESS'), this.translate.instant('SNACKBAR.CLOSE'), { duration: 3000 });
           this.dialogRef.close(true);
         },
         error: () => {

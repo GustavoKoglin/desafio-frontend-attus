@@ -10,6 +10,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatSelectModule } from '@angular/material/select';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { UserService } from '../../core/services/user.service';
@@ -29,7 +31,9 @@ import { UserModalComponent } from '../user-modal/user-modal.component';
     MatProgressSpinnerModule,
     MatDialogModule,
     MatPaginatorModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    TranslateModule,
+    MatSelectModule
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
@@ -39,6 +43,11 @@ export class UserListComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
+  public translate = inject(TranslateService);
+
+  isDarkMode = false;
+  currentLang = 'pt-br';
+  languages = ['pt-br', 'en', 'es', 'fr'];
 
   searchControl = new FormControl('');
   
@@ -54,8 +63,42 @@ export class UserListComponent implements OnInit {
   currentPage = signal<number>(0);
 
   ngOnInit() {
+    this.initTheme();
+    this.initLang();
     this.loadInitialUsers();
     this.setupSearch();
+  }
+
+  initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    this.isDarkMode = savedTheme === 'dark';
+    this.applyTheme();
+  }
+
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    this.applyTheme();
+  }
+
+  applyTheme() {
+    if (this.isDarkMode) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  }
+
+  initLang() {
+    const savedLang = localStorage.getItem('lang') || 'pt-br';
+    this.currentLang = savedLang;
+    this.translate.use(savedLang);
+  }
+
+  changeLang(lang: string) {
+    this.currentLang = lang;
+    localStorage.setItem('lang', lang);
+    this.translate.use(lang);
   }
 
   handlePageEvent(e: PageEvent) {
@@ -125,18 +168,19 @@ export class UserListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.snackBar.open(user ? 'Usuário editado com sucesso!' : 'Usuário criado com sucesso!', 'Fechar', { duration: 3000 });
+        this.snackBar.open(this.translate.instant(user ? 'SNACKBAR.EDIT_SUCCESS' : 'SNACKBAR.ADD_SUCCESS'), this.translate.instant('SNACKBAR.CLOSE'), { duration: 3000 });
         this.searchControl.setValue(this.searchControl.value); // Triggers re-search and updates UI
       }
     });
   }
 
   deleteUser(user: User) {
-    if (confirm(`Tem certeza que deseja excluir o usuário ${user.name}?`)) {
+    // Ideally we would translate the confirm dialog, but for simplicity we keep it or translate partially
+    if (confirm(`Excluir ${user.name}?`)) {
       this.loading.set(true);
       this.userService.deleteUser(user.id).subscribe({
         next: () => {
-          this.snackBar.open('Usuário excluído com sucesso!', 'Fechar', { duration: 3000 });
+          this.snackBar.open(this.translate.instant('SNACKBAR.DELETE_SUCCESS'), this.translate.instant('SNACKBAR.CLOSE'), { duration: 3000 });
           this.searchControl.setValue(this.searchControl.value);
         },
         error: () => {
