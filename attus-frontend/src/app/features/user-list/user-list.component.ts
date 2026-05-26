@@ -192,7 +192,8 @@ export class UserListComponent implements OnInit {
       switchMap(searchTerm => this.userService.getUsers().pipe(
         map(users => {
           if (!searchTerm) return users;
-          return users.filter(u => u.name.toLowerCase().includes(searchTerm.toLowerCase()));
+          const lowerTerm = searchTerm.toLowerCase();
+          return users.filter(u => u.name.toLowerCase().includes(lowerTerm) || u.email.toLowerCase().includes(lowerTerm));
         }),
         catchError(err => {
           this.error.set('Erro na busca.');

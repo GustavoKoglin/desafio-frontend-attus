@@ -6,7 +6,7 @@
     "LANGUAGE": "Idioma"
   },
   "SEARCH": {
-    "PLACEHOLDER": "Buscar por nombre"
+    "PLACEHOLDER": "Buscar por nombre o correo electrónico"
   },
   "CARD": {
     "DELETE": "Eliminar",
