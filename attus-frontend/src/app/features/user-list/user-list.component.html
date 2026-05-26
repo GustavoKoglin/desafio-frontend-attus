@@ -41,9 +41,13 @@
       </button>
 
       <mat-menu #profileMenu="matMenu">
-        <div class="profile-header">
-          <strong>{{ authService.currentUser()?.name }}</strong>
-          <small>{{ authService.currentUser()?.role }}</small>
+        <div class="profile-header" (click)="$event.stopPropagation()">
+          <img src="https://ui-avatars.com/api/?name={{ authService.currentUser()?.name }}&background=random" alt="Foto" class="profile-photo">
+          <div class="profile-info">
+            <strong>{{ authService.currentUser()?.name }}</strong>
+            <span class="profile-email">{{ authService.currentUser()?.email }}</span>
+            <span class="profile-role">{{ authService.currentUser()?.role }}</span>
+          </div>
         </div>
         <mat-divider></mat-divider>
         <button mat-menu-item>
