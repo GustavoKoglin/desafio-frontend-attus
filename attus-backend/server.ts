@@ -140,7 +140,7 @@ app.post('/api/users', authMiddleware, roleMiddleware(['Admin', 'Editor']), (req
   db.users.push(newUser);
   writeDB(db);
 
-  addLog(`Criou o usuário ${name} (${email})`, req.user.name, req.user.email, req.ip);
+  addLog(`Criou o usuário ${name} (${email})`, req.user.name, req.user.email, req.ip || '0.0.0.0');
 
   const { password: _, ...safeUser } = newUser;
   res.status(201).json(safeUser);
@@ -171,7 +171,7 @@ app.put('/api/users/:id', authMiddleware, roleMiddleware(['Admin', 'Editor']), (
 
   writeDB(db);
 
-  addLog(`Editou o usuário ${db.users[index].name} (${db.users[index].email})`, req.user.name, req.user.email, req.ip);
+  addLog(`Editou o usuário ${db.users[index].name} (${db.users[index].email})`, req.user.name, req.user.email, req.ip || '0.0.0.0');
 
   const { password: _, ...safeUser } = db.users[index];
   res.json(safeUser);
@@ -190,7 +190,7 @@ app.delete('/api/users/:id', authMiddleware, roleMiddleware(['Admin', 'Editor'])
   db.users.splice(index, 1);
   writeDB(db);
 
-  addLog(`Deletou o usuário ${user.name} (${user.email})`, req.user.name, req.user.email, req.ip);
+  addLog(`Deletou o usuário ${user.name} (${user.email})`, req.user.name, req.user.email, req.ip || '0.0.0.0');
 
   res.status(204).send();
 });
