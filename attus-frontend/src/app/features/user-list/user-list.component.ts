@@ -101,7 +101,7 @@ export class UserListComponent implements OnInit {
   logs = this.userService.logs;
 
   totalItems = signal<number>(0);
-  pageSize = signal<number>(5);
+  pageSize = signal<number>(10000);
   currentPage = signal<number>(0);
 
   ngOnInit() {
