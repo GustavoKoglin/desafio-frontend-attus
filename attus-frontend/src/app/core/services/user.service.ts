@@ -3,6 +3,24 @@ import { User } from '../models/user';
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
+const firstNames = ['Lucas', 'Mateus', 'Gabriel', 'Enzo', 'Valentina', 'Isabella', 'Sophia', 'Alice', 'Miguel', 'Arthur', 'Heitor', 'Bernardo', 'Davi', 'Lorenzo', 'Théo', 'Laura', 'Julia', 'Helena', 'Lívia', 'Giovanna'];
+const lastNames = ['Silva', 'Souza', 'Costa', 'Santos', 'Oliveira', 'Pereira', 'Rodrigues', 'Almeida', 'Nascimento', 'Lima', 'Araújo', 'Fernandes', 'Carvalho', 'Gomes', 'Martins', 'Rocha', 'Ribeiro', 'Alves', 'Monteiro', 'Mendes'];
+
+const generatedUsers: User[] = Array.from({ length: 80 }).map((_, i) => {
+  const fName = firstNames[i % firstNames.length];
+  const lName = lastNames[Math.floor(i / firstNames.length) % lastNames.length];
+  const name = `${fName} ${lName}`;
+  const phoneTypes: ('celular' | 'residencial' | 'trabalho')[] = ['celular', 'residencial', 'trabalho'];
+  return {
+    id: (i + 13).toString(),
+    name,
+    email: `${fName.toLowerCase()}.${lName.toLowerCase()}@email.com`,
+    cpf: `${Math.floor(Math.random() * 999).toString().padStart(3, '0')}.${Math.floor(Math.random() * 999).toString().padStart(3, '0')}.${Math.floor(Math.random() * 999).toString().padStart(3, '0')}-${Math.floor(Math.random() * 99).toString().padStart(2, '0')}`,
+    phone: `(11) 9${Math.floor(Math.random() * 9999).toString().padStart(4, '0')}-${Math.floor(Math.random() * 9999).toString().padStart(4, '0')}`,
+    phoneType: phoneTypes[i % 3]
+  };
+});
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,7 +38,8 @@ export class UserService {
     { id: '9', name: 'Bruno Alves', email: 'bruno@email.com', cpf: '777.888.999-00', phone: '(81) 95555-5555', phoneType: 'celular' },
     { id: '10', name: 'Fernanda Rocha', email: 'fernanda@email.com', cpf: '888.999.000-11', phone: '(91) 3366-9900', phoneType: 'residencial' },
     { id: '11', name: 'Marcos Ribeiro', email: 'marcos@email.com', cpf: '999.000.111-22', phone: '(85) 94444-4444', phoneType: 'celular' },
-    { id: '12', name: 'Juliana Mendes', email: 'juliana@email.com', cpf: '000.111.222-33', phone: '(98) 3377-1122', phoneType: 'trabalho' }
+    { id: '12', name: 'Juliana Mendes', email: 'juliana@email.com', cpf: '000.111.222-33', phone: '(98) 3377-1122', phoneType: 'trabalho' },
+    ...generatedUsers
   ]);
   
   private _logs = signal<{date: Date, message: string}[]>([]);
