@@ -39,8 +39,8 @@
 
 .role-legends {
   display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .legend-item {
