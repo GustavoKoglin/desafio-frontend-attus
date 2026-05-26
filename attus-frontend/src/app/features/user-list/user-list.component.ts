@@ -248,7 +248,7 @@ export class UserListComponent implements OnInit {
     // Ideally we would translate the confirm dialog, but for simplicity we keep it or translate partially
     if (confirm(`Excluir ${user.name}?`)) {
       this.loading.set(true);
-      this.userService.deleteUser(user.id).subscribe({
+      this.userService.deleteUser(user.id!).subscribe({
         next: () => {
           this.snackBar.open(this.translate.instant('SNACKBAR.DELETE_SUCCESS'), this.translate.instant('SNACKBAR.CLOSE'), { duration: 3000 });
           this.searchControl.setValue(this.searchControl.value);
