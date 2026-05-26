@@ -108,6 +108,30 @@ app.post('/api/login', (req: Request, res: Response) => {
   res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
 });
 
+// Buscar Perfil Completo do Usuário Logado
+app.get('/api/me', authMiddleware, (req: AuthRequest, res: Response) => {
+  const db = readDB();
+  const user = db.users.find((u: any) => u.id === req.user.id);
+  if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+  const { password, ...safeUser } = user;
+  res.json(safeUser);
+});
+
+// Atualizar Próprio Perfil
+app.put('/api/me', authMiddleware, (req: AuthRequest, res: Response) => {
+  const db = readDB();
+  const index = db.users.findIndex((u: any) => u.id === req.user.id);
+  if (index === -1) return res.status(404).json({ message: 'Usuário não encontrado' });
+
+  const { name, cpf, phone } = req.body;
+  if (name) db.users[index].name = name;
+  if (cpf) db.users[index].cpf = cpf;
+  if (phone) db.users[index].phone = phone;
+
+  writeDB(db);
+  res.json(db.users[index]);
+});
+
 // Listar Usuários do App
 app.get('/api/users', authMiddleware, (req: AuthRequest, res: Response) => {
   const db = readDB();

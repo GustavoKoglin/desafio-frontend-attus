@@ -48,6 +48,14 @@ export class UserService {
     );
   }
 
+  getMe(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/me`);
+  }
+
+  updateMe(data: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/me`, data);
+  }
+
   getPlatformUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/platform-users`);
   }

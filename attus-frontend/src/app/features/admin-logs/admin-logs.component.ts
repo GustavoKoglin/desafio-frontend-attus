@@ -62,6 +62,19 @@ export class AdminLogsComponent implements OnInit {
     this.currentUser = this.authService.currentUser();
     this.initProfileForm();
     
+    // Busca dados completos para preencher o formulário
+    this.userService.getMe().subscribe({
+      next: (fullUser) => {
+        this.currentUser = fullUser;
+        this.profileForm.patchValue({
+          name: fullUser.name,
+          email: fullUser.email,
+          cpf: fullUser.cpf,
+          phone: fullUser.phone
+        });
+      }
+    });
+    
     if (this.isAdmin) {
       this.fetchLogs();
       this.fetchPlatformUsers();
@@ -81,7 +94,7 @@ export class AdminLogsComponent implements OnInit {
     if (this.profileForm.invalid) return;
     
     const updatedData = { ...this.currentUser, ...this.profileForm.value };
-    this.userService.updatePlatformUser(this.currentUser.id, updatedData).subscribe({
+    this.userService.updateMe(updatedData).subscribe({
       next: () => {
         this.snackBar.open('Perfil atualizado com sucesso!', 'Fechar', { duration: 3000 });
         // Optionally update auth token if you have a refresh mechanism, or just reflect local changes.
