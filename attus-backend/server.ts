@@ -110,10 +110,12 @@ app.post('/api/login', (req: Request, res: Response) => {
 // Listar Usuários (todos logados podem ver)
 app.get('/api/users', authMiddleware, (req: AuthRequest, res: Response) => {
   const db = readDB();
-  const safeUsers = db.users.map((u: any) => {
-    const { password, ...rest } = u;
-    return rest;
-  });
+  const safeUsers = db.users
+    .filter((u: any) => u.id !== req.user.id)
+    .map((u: any) => {
+      const { password, ...rest } = u;
+      return rest;
+    });
   res.json(safeUsers);
 });
 
