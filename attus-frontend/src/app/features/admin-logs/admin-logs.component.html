@@ -38,7 +38,23 @@
     <mat-tab label="Usuários do Painel">
       <div class="tab-content">
         <div class="tab-header">
-          <p>Gerencie quem tem acesso a este painel administrativo (Admins, Editores, Visualizadores).</p>
+          <div class="header-text">
+            <p>Gerencie quem tem acesso a este painel administrativo.</p>
+            <div class="role-legends">
+              <div class="legend-item">
+                <span class="legend-dot admin"></span>
+                <strong>Admin:</strong> Acesso total. Visualiza logs e gerencia outros usuários.
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot editor"></span>
+                <strong>Editor:</strong> Pode adicionar, editar e excluir usuários.
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot viewer"></span>
+                <strong>Visualizador:</strong> Pode apenas visualizar e pesquisar usuários.
+              </div>
+            </div>
+          </div>
           <button mat-flat-button color="primary" (click)="openUserModal()">
             <mat-icon>add</mat-icon>
             Adicionar Usuário

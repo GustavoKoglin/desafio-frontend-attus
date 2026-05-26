@@ -33,8 +33,46 @@
 }
 
 .tab-header p {
-  margin: 0;
+  margin: 0 0 12px 0;
   color: var(--text-color, #666);
+}
+
+.role-legends {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-color, #555);
+}
+
+.legend-item strong {
+  margin-right: 4px;
+  color: var(--text-color-dark, #333);
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.legend-dot.admin {
+  background-color: #f44336; /* Vermelho Material */
+}
+
+.legend-dot.editor {
+  background-color: #ff9800; /* Laranja Material */
+}
+
+.legend-dot.viewer {
+  background-color: #2196f3; /* Azul Material */
 }
 
 .logs-grid {
